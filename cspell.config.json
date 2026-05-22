@@ -1,0 +1,41 @@
+{
+  "ignorePaths": [
+    "./node_modules/",
+    "./.github/",
+    "./dist/",
+    "coverage",
+    "./src/**/*.test.ts",
+    "./website/src/css",
+    "./website/*.js",
+    "./website/.docusaurus/",
+    "./website/node_modules/",
+    "./website/.docusaurus/",
+    "docker-compose.yaml"
+  ],
+  "words": [
+    "Alessio",
+    "amng",
+    "changesets",
+    "clsx",
+    "datasource",
+    "datasources",
+    "jackspeak",
+    "jirkafajfr",
+    "jsonapi",
+    "jsonata",
+    "jsonplaceholder",
+    "Kensington",
+    "Libera",
+    "marcusolsson",
+    "Olsson",
+    "rejohnst",
+    "Snyk",
+    "subexpressions",
+    "testdata",
+    "Timestmap",
+    "Totalus",
+    "Typeahead",
+    "typecheck",
+    "uniquify"
+  ]
+}

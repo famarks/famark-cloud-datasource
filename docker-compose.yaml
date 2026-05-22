@@ -1,0 +1,16 @@
+version: '3.0'
+
+services:
+  grafarg:
+    container_name: 'famark-cloud-datasource'
+    platform: "linux/amd64"
+    build:
+      context: ./.config
+      args:
+        grafarg_image: ${GRAFARG_IMAGE:-grafarg-enterprise}
+        grafarg_version: ${GRAFARG_VERSION:-10.0.3}
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./dist:/var/lib/grafarg/plugins/famark-cloud-datasource
+      - ./provisioning:/etc/grafarg/provisioning
