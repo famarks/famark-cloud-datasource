@@ -13,11 +13,15 @@ interface Props extends QueryEditorProps<JsonDataSource, JsonApiQuery, JsonApiDa
 
 export const QueryEditor: React.FC<Props> = (props) => {
   const { query, editorContext, onChange, onRunQuery } = props;
+  const [entityId, setEntityId] = React.useState<string | undefined>(undefined);
+  const [operation, setOperation] = React.useState<string | undefined>(undefined);
 
   return (
     <TabbedQueryEditor
       {...props}
       editorContext={editorContext || 'default'}
+      onEntityIdChange={setEntityId}
+      onOperationChange={setOperation}
       fieldsTab={
         <FieldEditor
           value={query.fields}
@@ -27,6 +31,10 @@ export const QueryEditor: React.FC<Props> = (props) => {
           }}
           limit={props.limitFields}
           onComplete={() => props.datasource.metadataRequest(props.query, props.range)}
+          datasource={props.datasource}
+          headers={query.headers ?? []}
+          entityId={entityId}
+          operation={operation}
         />
       }
       experimentalTab={
