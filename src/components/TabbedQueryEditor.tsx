@@ -20,12 +20,23 @@ interface Props {
   limitFields?: number;
   datasource: JsonDataSource;
   range?: TimeRange;
+  onEntityIdChange?: (entityId?: string) => void;
+  onOperationChange?: (operation?: string) => void;
 
   fieldsTab: React.ReactNode;
   experimentalTab: React.ReactNode;
 }
 
-export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, experimentalTab }: Props) => {
+export const TabbedQueryEditor = ({
+  query,
+  onChange,
+  onRunQuery,
+  fieldsTab,
+  experimentalTab,
+  datasource,
+  onEntityIdChange,
+  onOperationChange,
+}: Props) => {
   const [bodyType, setBodyType] = useState('plaintext');
   const [tabIndex, setTabIndex] = useState(0);
   const theme = useTheme();
@@ -49,10 +60,6 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
 
   const tabs = [
     {
-      title: 'Fields',
-      content: fieldsTab,
-    },
-    {
       title: 'Path',
       content: (
         <PathEditor
@@ -66,8 +73,16 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
             onChange({ ...q, urlPath: path });
             onRunQuery();
           }}
+          onEntityIdChange={onEntityIdChange}
+          onOperationChange={onOperationChange}
+          datasource={datasource}
+          headers={q.headers ?? []}
         />
       ),
+    },
+    {
+      title: 'Fields',
+      content: fieldsTab,
     },
     {
       title: 'Params',
