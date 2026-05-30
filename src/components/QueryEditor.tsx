@@ -20,6 +20,8 @@ export const QueryEditor: React.FC<Props> = (props) => {
     <TabbedQueryEditor
       {...props}
       editorContext={editorContext || 'default'}
+      entityId={entityId}
+      operation={operation}
       onEntityIdChange={setEntityId}
       onOperationChange={setOperation}
       fieldsTab={

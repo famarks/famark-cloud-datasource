@@ -3,6 +3,7 @@ import { Icon, InlineField, InlineFieldRow, Input, Select } from '@grafarg/ui';
 import { JsonDataSource } from 'datasource';
 import React, { useEffect, useState } from 'react';
 import { JsonField, Pair, QueryLanguage } from 'types';
+import { fetchAttributeOptions } from './BodyQueryBuilder';
 import { JsonataQueryField } from './JsonataQueryField';
 import { JsonPathQueryField } from './JsonPathQueryField';
 
@@ -16,28 +17,6 @@ interface Props {
   onComplete: () => Promise<any>;
   value: JsonField[];
 }
-
-const attributePath = '/System_Attribute/RetrieveMultipleRecords';
-
-const buildAttributeBody = (entityId: string) =>
-  JSON.stringify({
-    Columns: 'SystemName',
-    Filter: {
-      Operator: 0,
-      Conditions: [
-        {
-          FieldName: 'EntityId',
-          Operator: 0,
-          ServerValue: 0,
-          Values: [entityId],
-          IsNot: false,
-        },
-      ],
-    },
-    OrderBy: 'SystemName',
-    PageSize: 500,
-    PageIndex: 0,
-  });
 
 const findLastAttribute = (path: string, options: Array<SelectableValue<string>>) => {
   let lastIndex = -1;
@@ -79,11 +58,9 @@ export const FieldEditor = ({
       return;
     }
     setAttributesLoading(true);
-    datasource.api
-      .get('POST', attributePath, [], headers, buildAttributeBody(entityId))
-      .then((attributes) =>
-        setAttributeOptions(attributes.map((record: any) => ({ label: record.SystemName, value: record.SystemName })))
-      )
+    fetchAttributeOptions(datasource, headers, entityId)
+      .then(setAttributeOptions)
+      .catch(() => setAttributeOptions([]))
       .finally(() => setAttributesLoading(false));
   }, [datasource, entityId, headers]);
 

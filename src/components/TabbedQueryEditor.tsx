@@ -6,6 +6,7 @@ import defaults from 'lodash/defaults';
 import React, { useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { defaultQuery, JsonApiQuery, Pair } from '../types';
+import { BodyQueryBuilder } from './BodyQueryBuilder';
 import { KeyValueEditor } from './KeyValueEditor';
 import { PathEditor } from './PathEditor';
 
@@ -20,6 +21,8 @@ interface Props {
   limitFields?: number;
   datasource: JsonDataSource;
   range?: TimeRange;
+  entityId?: string;
+  operation?: string;
   onEntityIdChange?: (entityId?: string) => void;
   onOperationChange?: (operation?: string) => void;
 
@@ -36,9 +39,11 @@ export const TabbedQueryEditor = ({
   datasource,
   onEntityIdChange,
   onOperationChange,
+  entityId,
 }: Props) => {
   const [bodyType, setBodyType] = useState('plaintext');
   const [tabIndex, setTabIndex] = useState(0);
+  const [bodyMode, setBodyMode] = useState<'builder' | 'json'>('builder');
   const theme = useTheme();
 
   const q = defaults(query, defaultQuery);
@@ -81,10 +86,6 @@ export const TabbedQueryEditor = ({
       ),
     },
     {
-      title: 'Fields',
-      content: fieldsTab,
-    },
-    {
       title: 'Params',
       content: (
         <KeyValueEditor
@@ -113,40 +114,68 @@ export const TabbedQueryEditor = ({
       content: (
         <>
           <InlineFieldRow>
-            <InlineField label="Syntax highlighting">
+            <InlineField label="Body view">
               <RadioButtonGroup
-                value={bodyType}
-                onChange={(v) => setBodyType(v ?? 'plaintext')}
+                value={bodyMode}
+                onChange={(v) => setBodyMode((v as 'builder' | 'json') ?? 'builder')}
                 options={[
-                  { label: 'Text', value: 'plaintext' },
-                  { label: 'JSON', value: 'json' },
-                  { label: 'XML', value: 'xml' },
+                  { label: 'Query Builder', value: 'builder' },
+                  { label: 'Edit JSON', value: 'json' },
                 ]}
               />
             </InlineField>
           </InlineFieldRow>
-          <InlineFieldRow>
-            <AutoSizer
-              disableHeight
-              className={css`
-                margin-bottom: ${theme.spacing.sm};
-              `}
-            >
-              {({ width }: { width: number }) => (
-                <CodeEditor
-                  value={q.body || ''}
-                  language={bodyType}
-                  width={width}
-                  height="200px"
-                  showMiniMap={false}
-                  showLineNumbers={true}
-                  onBlur={onBodyChange}
-                />
-              )}
-            </AutoSizer>
-          </InlineFieldRow>
+          {bodyMode === 'builder' ? (
+            <BodyQueryBuilder
+              datasource={datasource}
+              entityId={entityId}
+              headers={q.headers ?? []}
+              body={q.body ?? ''}
+              onBodyChange={onBodyChange}
+            />
+          ) : (
+            <>
+              <InlineFieldRow>
+                <InlineField label="Syntax highlighting">
+                  <RadioButtonGroup
+                    value={bodyType}
+                    onChange={(v) => setBodyType(v ?? 'plaintext')}
+                    options={[
+                      { label: 'Text', value: 'plaintext' },
+                      { label: 'JSON', value: 'json' },
+                      { label: 'XML', value: 'xml' },
+                    ]}
+                  />
+                </InlineField>
+              </InlineFieldRow>
+              <InlineFieldRow>
+                <AutoSizer
+                  disableHeight
+                  className={css`
+                    margin-bottom: ${theme.spacing.sm};
+                  `}
+                >
+                  {({ width }: { width: number }) => (
+                    <CodeEditor
+                      value={q.body || ''}
+                      language={bodyType}
+                      width={width}
+                      height="200px"
+                      showMiniMap={false}
+                      showLineNumbers={true}
+                      onBlur={onBodyChange}
+                    />
+                  )}
+                </AutoSizer>
+              </InlineFieldRow>
+            </>
+          )}
         </>
       ),
+    },
+    {
+      title: 'Fields',
+      content: fieldsTab,
     },
     {
       title: 'Experimental',
