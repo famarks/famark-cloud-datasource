@@ -37,6 +37,7 @@ export const QueryEditor: React.FC<Props> = (props) => {
           headers={query.headers ?? []}
           entityId={entityId}
           operation={operation}
+          body={query.body}
         />
       }
       experimentalTab={

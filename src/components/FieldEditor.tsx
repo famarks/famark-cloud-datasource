@@ -16,6 +16,7 @@ interface Props {
   onChange: (value: JsonField[]) => void;
   onComplete: () => Promise<any>;
   value: JsonField[];
+  body?: string;
 }
 
 const findLastAttribute = (path: string, options: Array<SelectableValue<string>>) => {
@@ -37,6 +38,40 @@ const getSelectedAttribute = (path: string, options: Array<SelectableValue<strin
   return last ? options.find((option) => option.value === last.lastValue) : undefined;
 };
 
+const parseColumnsFromBody = (body?: string): string[] => {
+  try {
+    const obj = JSON.parse(body || '{}');
+    return String(obj?.Columns ?? '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+};
+
+const attributeTypeToFieldType = (attrType?: string): FieldType | undefined => {
+  switch (attrType) {
+    case 'TypeCurrency':
+    case 'TypeDecimalNumber':
+    case 'TypeFloatingNumber':
+    case 'TypeWholeNumber':
+      return FieldType.number;
+    case 'TypeSingleLine':
+    case 'TypeMultipleLine':
+      return FieldType.string;
+    case 'TypeDateTime':
+      return FieldType.time;
+    case 'TypeTwoOptions':
+      return FieldType.boolean;
+    case 'TypeLookup':
+    case 'TypeOptionSet':
+      return undefined;
+    default:
+      return undefined;
+  }
+};
+
 export const FieldEditor = ({
   value = [],
   onChange,
@@ -46,10 +81,15 @@ export const FieldEditor = ({
   headers,
   entityId,
   operation,
+  body,
 }: Props) => {
+  console.log('rendering body data', body);
+  const didPrefill = React.useRef(false);
   const [attributeOptions, setAttributeOptions] = useState<Array<SelectableValue<string>>>([]);
   const [attributesLoading, setAttributesLoading] = useState(false);
   const isStats = operation === 'RetrieveStats';
+  const getAttributeType = (name?: string) =>
+    attributeOptions.find((o) => o.value === name)?.attributeType as string | undefined;
 
   useEffect(() => {
     if (!entityId) {
@@ -63,6 +103,37 @@ export const FieldEditor = ({
       .catch(() => setAttributeOptions([]))
       .finally(() => setAttributesLoading(false));
   }, [datasource, entityId, headers]);
+
+  useEffect(() => {
+    if (didPrefill.current || value.length) {
+      return;
+    }
+    const columns = parseColumnsFromBody(body);
+    if (!columns.length) {
+      return;
+    }
+
+    const prefix = operation === 'RetrieveMultipleRecords' ? '$[*].' : '$.';
+    const next = columns.map((col, idx) => {
+      const existing = value[idx];
+      const attrType = isStats ? undefined : getAttributeType(col);
+      return {
+        name: existing?.name ?? '',
+        jsonPath: isStats ? '$.Data[*][*]' : `${prefix}${col}`,
+        language: existing?.language ?? 'jsonpath',
+        type: existing?.type ?? (isStats ? undefined : attributeTypeToFieldType(attrType)),
+      };
+    });
+
+    const same =
+      value.length === next.length &&
+      value.every((field, i) => field.jsonPath === next[i].jsonPath && field.type === next[i].type);
+
+    if (!same) {
+      onChange(next);
+    }
+    didPrefill.current = true;
+  }, [body, isStats, operation, value.length, onChange, attributeOptions]);
 
   useEffect(() => {
     if (isStats && value.some((field) => !field.jsonPath)) {
@@ -90,11 +161,12 @@ export const FieldEditor = ({
       : last
       ? current.slice(0, last.lastIndex) + current.slice(last.lastIndex + 1 + last.lastValue.length)
       : current;
-    updateField(i, { jsonPath: nextPath });
+    const attrType = e?.value ? getAttributeType(e.value) : undefined;
+    const mappedType = attrType ? attributeTypeToFieldType(attrType) : undefined;
+    updateField(i, { jsonPath: nextPath, type: mappedType });
   };
 
   const addField = (i: number, defaults?: { language: QueryLanguage }) => () =>
-    (!limit || value.length < limit) &&
     onChange([...value.slice(0, i + 1), { name: '', jsonPath: '', ...defaults }, ...value.slice(i + 1)]);
   const removeField = (i: number) => () => onChange(value.filter((_, n) => n !== i));
 
@@ -164,17 +236,13 @@ export const FieldEditor = ({
             <Input width={12} value={field.name} onChange={onAliasChange(index)} />
           </InlineField>
 
-          {(!limit || value.length < limit) && (
-            <a className="gf-form-label" onClick={addField(index, { language: field.language ?? 'jsonpath' })}>
-              <Icon name="plus" />
-            </a>
-          )}
+          <a className="gf-form-label" onClick={addField(index, { language: field.language ?? 'jsonpath' })}>
+            <Icon name="plus" />
+          </a>
 
-          {value.length > 1 ? (
-            <a className="gf-form-label" onClick={removeField(index)}>
-              <Icon name="minus" />
-            </a>
-          ) : null}
+          <a className="gf-form-label" onClick={removeField(index)}>
+            <Icon name="minus" />
+          </a>
         </InlineFieldRow>
       ))}
     </>

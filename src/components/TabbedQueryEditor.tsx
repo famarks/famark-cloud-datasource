@@ -40,6 +40,7 @@ export const TabbedQueryEditor = ({
   onEntityIdChange,
   onOperationChange,
   entityId,
+  operation,
 }: Props) => {
   const [bodyType, setBodyType] = useState('plaintext');
   const [tabIndex, setTabIndex] = useState(0);
@@ -132,6 +133,7 @@ export const TabbedQueryEditor = ({
               headers={q.headers ?? []}
               body={q.body ?? ''}
               onBodyChange={onBodyChange}
+              operation={operation}
             />
           ) : (
             <>
