@@ -23,7 +23,8 @@ export default class Api {
     path: string,
     params?: Array<Pair<string, string>>,
     headers?: Array<Pair<string, string>>,
-    body?: string
+    body?: string,
+    options?: { hideFromInspector?: boolean }
   ): Promise<any> {
     const paramsData: Record<string, string> = {};
     // In order to allow for duplicate URL params add a suffix to it to
@@ -41,7 +42,7 @@ export default class Api {
       paramsData[key] = value;
     });
 
-    const response = this._request(method, path, paramsData, headers, body);
+    const response = this._request(method, path, paramsData, headers, body, options);
 
     return (await response.toPromise()).data;
   }
@@ -74,14 +75,7 @@ export default class Api {
       return await this.get(method, path, params, headers, body);
     }
 
-    let cacheKey = this.baseUrl + path;
-
-    if (params && Object.keys(params).length > 0) {
-      cacheKey =
-        cacheKey +
-        (cacheKey.search(/\?/) >= 0 ? '&' : '?') +
-        params.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
-    }
+    const cacheKey = JSON.stringify({ method, url: this.baseUrl + path, params, headers, body });
 
     if (this.lastCacheDuration !== cacheDurationSeconds) {
       this.cache.del(cacheKey);
@@ -112,7 +106,8 @@ export default class Api {
     path: string,
     params?: Record<string, string>,
     headers?: Array<Pair<string, string>>,
-    data?: string
+    data?: string,
+    options?: { hideFromInspector?: boolean }
   ): Observable<any> {
     const recordHeaders: Record<string, any> = {};
 
@@ -126,6 +121,7 @@ export default class Api {
       url: this.baseUrl + path,
       method,
       headers: recordHeaders,
+      hideFromInspector: options?.hideFromInspector,
     };
 
     if (req.method !== 'GET' && data) {

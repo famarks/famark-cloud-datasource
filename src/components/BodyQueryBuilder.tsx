@@ -129,20 +129,23 @@ export const BodyQueryBuilder: React.FC<Props> = ({ datasource, entityId, header
 
   // Save helpers
   const save = (cols: string[], ob: string, dtp = dateTimePart, dti = dateTimeInterval) => {
-    const obj: Record<string, string> = { Columns: cols.filter(Boolean).join(', ') };
+    let obj: any = {};
+    try {
+      obj = JSON.parse(body || '{}');
+    } catch {}
+
+    obj.Columns = cols.filter(Boolean).join(', ') || undefined;
     if (isStats) {
-      if (ob) {
-        obj.GroupBy = ob;
-      }
-      if (dtp) {
-        obj.DateTimePart = dtp;
-        if (dtp === 'Time' && dti) {
-          obj.DateTimeInterval = dti;
-        }
-      }
+      obj.GroupBy = ob || undefined;
+      obj.DateTimePart = dtp || undefined;
+      obj.DateTimeInterval = dtp === 'Time' && dti ? dti : undefined;
+      obj.OrderBy = undefined;
     } else {
-      obj.OrderBy = ob;
+      obj.OrderBy = ob || undefined;
+      obj.GroupBy = obj.DateTimePart = obj.DateTimeInterval = undefined;
     }
+
+    Object.keys(obj).forEach((k) => obj[k] === undefined && delete obj[k]);
     onBodyChange(JSON.stringify(obj, null, 2));
   };
 
@@ -338,37 +341,41 @@ export const BodyQueryBuilder: React.FC<Props> = ({ datasource, entityId, header
               />
             </InlineField>
           </InlineFieldRow>
-          <InlineFieldRow>
-            <InlineField label="DateTimePart">
-              <Select
-                placeholder="DateTimePart"
-                isClearable={true}
-                value={dateTimePart ? { label: dateTimePart, value: dateTimePart } : undefined}
-                options={DTP_OPTS}
-                onChange={(v) => {
-                  const dtp = v?.value ?? '';
-                  setDateTimePart(dtp);
-                  if (dtp !== 'Time') {
-                    setDateTimeInterval('');
-                  }
-                  save(columns, orderBy, dtp, dtp === 'Time' ? dateTimeInterval : '');
-                }}
-                width={16}
-              />
-            </InlineField>
-          </InlineFieldRow>
-          {dateTimePart === 'Time' && (
-            <InlineFieldRow>
-              <InlineField label="DateTimeInterval">
-                <Input
-                  placeholder="e.g. 1h, 1m"
-                  value={dateTimeInterval}
-                  onChange={(e) => setDateTimeInterval(e.currentTarget.value)}
-                  onBlur={(e) => save(columns, orderBy, dateTimePart, e.currentTarget.value)}
-                  width={16}
-                />
-              </InlineField>
-            </InlineFieldRow>
+          {attrOptions.find((o: any) => o.value === orderBy)?.attributeType === 'TypeDateTime' && (
+            <>
+              <InlineFieldRow>
+                <InlineField label="DateTimePart">
+                  <Select
+                    placeholder="DateTimePart"
+                    isClearable={true}
+                    value={dateTimePart ? { label: dateTimePart, value: dateTimePart } : undefined}
+                    options={DTP_OPTS}
+                    onChange={(v) => {
+                      const dtp = v?.value ?? '';
+                      setDateTimePart(dtp);
+                      if (dtp !== 'Time') {
+                        setDateTimeInterval('');
+                      }
+                      save(columns, orderBy, dtp, dtp === 'Time' ? dateTimeInterval : '');
+                    }}
+                    width={16}
+                  />
+                </InlineField>
+              </InlineFieldRow>
+              {dateTimePart === 'Time' && (
+                <InlineFieldRow>
+                  <InlineField label="DateTimeInterval">
+                    <Input
+                      placeholder="e.g. 1h, 1m"
+                      value={dateTimeInterval}
+                      onChange={(e) => setDateTimeInterval(e.currentTarget.value)}
+                      onBlur={(e) => save(columns, orderBy, dateTimePart, e.currentTarget.value)}
+                      width={16}
+                    />
+                  </InlineField>
+                </InlineFieldRow>
+              )}
+            </>
           )}
         </>
       ) : (
