@@ -5,7 +5,7 @@ title: Query editor
 
 This page explains the what each part of the query editor does, and how you can configure it.
 
-The query editor for the JSON API data source consists of a number of tabs. Each tab configures a part of the query.
+The query editor for the Famark JSON API data source consists of a number of tabs. Each tab configures a part of the query.
 
 ### Fields
 

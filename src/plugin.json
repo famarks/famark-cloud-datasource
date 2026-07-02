@@ -1,7 +1,7 @@
 {
   "$schema": "https://github.com/famarks/grafarg/raw/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "JSON API",
+  "name": "Famark JSON API",
   "id": "famark-cloud-datasource",
   "metrics": true,
   "logs": true,

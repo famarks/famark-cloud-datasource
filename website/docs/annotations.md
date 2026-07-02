@@ -8,10 +8,10 @@ title: Annotations
 [Annotations](https://grafarg.com/docs/grafarg/latest/dashboards/annotations) let you extract data from a data source and use it to annotate a dashboard.
 
 :::info
-Annotations support was added in **v1.0.1**. If you can't select the JSON API data source from the list of data sources, try updating to a more recent version.
+Annotations support was added in **v1.0.1**. If you can't select the Famark JSON API data source from the list of data sources, try updating to a more recent version.
 :::
 
-To use the JSON API data source for annotations, follow the instructions on [Querying other data sources](https://grafarg.com/docs/grafarg/latest/dashboards/annotations/#querying-other-data-sources). Make sure to select the JSON API from the list of data sources.
+To use the Famark JSON API data source for annotations, follow the instructions on [Querying other data sources](https://grafarg.com/docs/grafarg/latest/dashboards/annotations/#querying-other-data-sources). Make sure to select the Famark JSON API from the list of data sources.
 
 Configure a query with _at least_ two fields:
 

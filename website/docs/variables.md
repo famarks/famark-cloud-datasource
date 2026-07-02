@@ -7,7 +7,7 @@ title: Variables
 
 [Query variables](https://grafarg.com/docs/grafarg/latest/variables/variable-types/add-query-variable) let you extract data from a data source and use it to populate a dashboard variable.
 
-To query the JSON API data source for variables, follow the instructions on how to [Add a query variable](https://grafarg.com/docs/grafarg/latest/variables/variable-types/add-query-variable). Make sure to select the JSON API from the list of data sources.
+To query the Famark JSON API data source for variables, follow the instructions on how to [Add a query variable](https://grafarg.com/docs/grafarg/latest/variables/variable-types/add-query-variable). Make sure to select the Famark JSON API from the list of data sources.
 
 You can edit the query for the variable in the same way as the default query editor except that you can only define one field.
 

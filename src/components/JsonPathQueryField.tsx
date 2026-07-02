@@ -1,6 +1,6 @@
 import { BracesPlugin, QueryField, SlatePrism, TypeaheadInput } from '@grafarg/ui';
 import React from 'react';
-import { onSuggest } from 'suggestions';
+import { onSuggest } from '../suggestions';
 
 interface Props {
   query: string;

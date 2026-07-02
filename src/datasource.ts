@@ -20,7 +20,7 @@ import API from './api';
 import { detectFieldType } from './detectFieldType';
 import { parseValues } from './parseValues';
 import { JsonApiDataSourceOptions, JsonApiQuery, Pair } from './types';
-import { trackRequest } from 'tracking';
+import { trackRequest } from './tracking';
 
 export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourceOptions> {
   api: API;
@@ -110,7 +110,7 @@ export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourc
           message: err,
         };
       } else {
-        let message = 'JSON API: ';
+        let message = 'Famark JSON API: ';
         message += err.statusText ? err.statusText : defaultErrorMessage;
         if (err.data && err.data.error && err.data.error.code) {
           message += ': ' + err.data.error.code + '. ' + err.data.error.message;

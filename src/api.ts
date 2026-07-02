@@ -1,7 +1,7 @@
 import { BackendSrvRequest, getBackendSrv } from '@grafarg/runtime';
 import cache from 'memory-cache';
 import { Observable } from 'rxjs';
-import { Pair } from 'types';
+import { Pair } from './types';
 
 export default class Api {
   cache: any;

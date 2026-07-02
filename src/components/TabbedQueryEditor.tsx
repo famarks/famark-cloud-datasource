@@ -1,6 +1,6 @@
 import { TimeRange } from '@grafarg/data';
 import { CodeEditor, InfoBox, InlineField, InlineFieldRow, RadioButtonGroup, Segment, useTheme } from '@grafarg/ui';
-import { JsonDataSource } from 'datasource';
+import { JsonDataSource } from '../datasource';
 import { css } from 'emotion';
 import defaults from 'lodash/defaults';
 import React, { useState } from 'react';

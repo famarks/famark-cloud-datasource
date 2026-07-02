@@ -1,8 +1,8 @@
 import { FieldType, SelectableValue } from '@grafarg/data';
 import { Icon, InlineField, InlineFieldRow, Input, Select } from '@grafarg/ui';
-import { JsonDataSource } from 'datasource';
+import { JsonDataSource } from '../datasource';
 import React, { useEffect, useState } from 'react';
-import { JsonField, Pair, QueryLanguage } from 'types';
+import { JsonField, Pair, QueryLanguage } from '../types';
 import { fetchAttributeOptions, splitColumnIntoAggAndAttribute } from './BodyQueryBuilder';
 import { JsonataQueryField } from './JsonataQueryField';
 import { JsonPathQueryField } from './JsonPathQueryField';

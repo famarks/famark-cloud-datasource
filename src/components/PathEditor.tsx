@@ -1,7 +1,7 @@
 import { InlineField, InlineFieldRow, Input, Select } from '@grafarg/ui';
-import { JsonDataSource } from 'datasource';
+import { JsonDataSource } from '../datasource';
 import React, { useEffect, useState } from 'react';
-import { Pair } from 'types';
+import { Pair } from '../types';
 
 interface Props {
   method: string;

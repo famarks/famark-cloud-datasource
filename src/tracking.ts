@@ -1,6 +1,6 @@
 import { CoreApp, DataQueryRequest } from '@grafarg/data';
 //import { reportInteraction } from '@grafarg/runtime';
-import { JsonApiQuery } from 'types';
+import { JsonApiQuery } from './types';
 
 export const trackRequest = (request: DataQueryRequest<JsonApiQuery>) => {
   // commented out tracking for now as it is not yet available in @grafarg/runtime

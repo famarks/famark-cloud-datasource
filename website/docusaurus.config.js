@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'JSON API for Grafarg',
+  title: 'Famark JSON API for Grafarg',
   url: 'https://grafarg.github.io',
   baseUrl: '/famark-cloud-datasource/',
   onBrokenLinks: 'throw',
@@ -10,7 +10,7 @@ module.exports = {
   scripts: [],
   themeConfig: {
     navbar: {
-      title: 'JSON API Data Source for Grafarg',
+      title: 'Famark JSON API Data Source for Grafarg',
       logo: {
         alt: 'Logo',
         src: 'img/logo.svg',

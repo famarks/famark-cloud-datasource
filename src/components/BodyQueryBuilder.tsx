@@ -1,6 +1,6 @@
 import { SelectableValue } from '@grafarg/data';
 import { Icon, InlineField, InlineFieldRow, Input, Select, useTheme } from '@grafarg/ui';
-import { JsonDataSource } from 'datasource';
+import { JsonDataSource } from '../datasource';
 import { css } from 'emotion';
 import React, { useEffect, useState } from 'react';
 import { Pair } from '../types';

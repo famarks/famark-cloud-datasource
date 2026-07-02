@@ -1,7 +1,7 @@
 import { InfoBox, InlineField, InlineFieldRow, Select } from '@grafarg/ui';
 import { JSONPath } from 'jsonpath-plus';
 import React from 'react';
-import { JsonApiQuery } from 'types';
+import { JsonApiQuery } from '../types';
 
 interface Props {
   query: JsonApiQuery;

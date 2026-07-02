@@ -1,5 +1,5 @@
 import { TimeRange } from '@grafarg/data';
-import { JsonDataSource } from 'datasource';
+import { JsonDataSource } from '../datasource';
 import defaults from 'lodash/defaults';
 import React from 'react';
 import { defaultQuery, JsonApiQuery } from '../types';

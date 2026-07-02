@@ -1,4 +1,4 @@
-# JSON API data source for Grafarg
+# Famark JSON API data source for Grafarg
 
 [![Build](https://github.com/famarks/famark-cloud-datasource/workflows/CI/badge.svg)](https://github.com/famarks/famark-cloud-datasource/actions?query=workflow%3A%22CI%22)
 [![Release](https://github.com/famarks/famark-cloud-datasource/workflows/Release/badge.svg)](https://github.com/famarks/famark-cloud-datasource/actions?query=workflow%3ARelease)
